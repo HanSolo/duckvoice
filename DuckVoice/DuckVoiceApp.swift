@@ -1,17 +1,14 @@
-//
-//  DuckVoiceApp.swift
-//  DuckVoice
-//
-//  Created by Gerrit Grunwald on 18.11.26.
-//
-
 import SwiftUI
 
 @main
 struct DuckVoiceApp: App {
+    @State private var model = ViewModel()
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        WindowGroup("Duck Clinic Voice") {
+            ContentView(model: model)
+                .task { await model.start() }
+                .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)) { _ in model.stop() }
         }
     }
 }
